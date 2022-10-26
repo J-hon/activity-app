@@ -7,6 +7,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 interface RevisionContract extends BaseContract
 {
 
-    public function getByDateRange($startDate, $endDate): LengthAwarePaginator;
+    public function getUserActivitiesByDateRange(int $userId, $startDate, $endDate): LengthAwarePaginator;
 
 }

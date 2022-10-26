@@ -8,6 +8,7 @@ use App\Http\Resources\ActivityCollection;
 use App\Http\Resources\ActivityResource;
 use App\Services\ActivityService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends BaseController
 {
@@ -29,7 +30,7 @@ class ActivityController extends BaseController
 
     public function fetchByDate(): JsonResponse
     {
-        $response = $this->activityService->getBy(request('start_date'), request('end_date'));
+        $response = $this->activityService->getBy(Auth::id(), request('start_date'), request('end_date'));
         return $this->responseJson(
             $response['status'],
             $response['code'],

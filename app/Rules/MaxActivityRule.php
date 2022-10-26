@@ -40,6 +40,6 @@ class MaxActivityRule implements Rule
      */
     public function message()
     {
-        return "Maximum limit of 4 activities reached for each day";
+        return "Maximum limit of 4 daily activities reached!";
     }
 }

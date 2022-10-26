@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\ActivityContract;
 use App\Contracts\RevisionContract;
 use App\Jobs\CreateActivityForUsersJob;
+use Carbon\Carbon;
 use Throwable;
 
 class ActivityService
@@ -16,10 +17,13 @@ class ActivityService
     ) {
     }
 
-    public function getBy($startDate, $endDate): array
+    public function getBy(int $userId, $startDate, $endDate): array
     {
         try {
-            $activities = $this->revisionRepository->getByDateRange($startDate, $endDate);
+            $startDate = Carbon::parse($startDate)->toDateString();
+            $endDate   = Carbon::parse($endDate)->toDateString();
+
+            $activities = $this->revisionRepository->getUserActivitiesByDateRange($userId, $startDate, $endDate);
             return [
                 'status'  => true,
                 'message' => 'Activities retrieved!',

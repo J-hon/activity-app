@@ -15,9 +15,10 @@ class RevisionRepository extends BaseRepository implements RevisionContract
         $this->model = $model;
     }
 
-    public function getByDateRange($startDate, $endDate): LengthAwarePaginator
+    public function getUserActivitiesByDateRange(int $userId, $startDate, $endDate): LengthAwarePaginator
     {
         return $this->getQuery()
+            ->where('user_id', '=', $userId)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->paginate(10);
     }

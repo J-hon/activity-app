@@ -21,12 +21,16 @@ Route::prefix('auth')->group(function () {
     Route::post('logout', [AuthenticationController::class, 'logout']);
 });
 
-Route::prefix('activity')->group(function () {
-    Route::get('', [ActivityController::class, 'index']);
-    Route::post('', [ActivityController::class, 'store']);
-    Route::put('{id}', [ActivityController::class, 'update']);
-    Route::delete('{id}', [ActivityController::class, 'destroy']);
-    Route::get('get-by-date', [ActivityController::class, 'fetchByDate']);
-});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('activity')->group(function () {
+        Route::get('', [ActivityController::class, 'index']);
+        Route::post('', [ActivityController::class, 'store']);
+        Route::put('{id}', [ActivityController::class, 'update']);
+        Route::delete('{id}', [ActivityController::class, 'destroy']);
+    });
 
-Route::put('user/{userId}/activity/{activityId}', [ActivityController::class, 'updateOne']);
+    Route::prefix('user')->group(function () {
+        Route::get('activities/get-by-date', [ActivityController::class, 'fetchByDate']);
+        Route::put('{userId}/activity/{activityId}', [ActivityController::class, 'updateOne']);
+    });
+});
