@@ -24,7 +24,7 @@ abstract class TestCase extends BaseTestCase
 
         $this->faker = Faker::create();
 
-        Artisan::call('migrate --seed');
+        Artisan::call('migrate:fresh --seed');
 
         $this->withoutExceptionHandling();
     }
