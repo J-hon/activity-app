@@ -22,15 +22,16 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::prefix('activity')->group(function () {
-        Route::get('', [ActivityController::class, 'index']);
-        Route::post('', [ActivityController::class, 'store']);
-        Route::put('{id}', [ActivityController::class, 'update']);
-        Route::delete('{id}', [ActivityController::class, 'destroy']);
+    Route::middleware('super.admin')->group(function () {
+        Route::prefix('activity')->group(function () {
+            Route::get('', [ActivityController::class, 'index']);
+            Route::post('', [ActivityController::class, 'store']);
+            Route::put('{id}', [ActivityController::class, 'update']);
+            Route::delete('{id}', [ActivityController::class, 'destroy']);
+        });
+
+        Route::put('user/{userId}/activity/{activityId}', [ActivityController::class, 'updateOne']);
     });
 
-    Route::prefix('user')->group(function () {
-        Route::get('activities/get-by-date', [ActivityController::class, 'fetchByDate']);
-        Route::put('{userId}/activity/{activityId}', [ActivityController::class, 'updateOne']);
-    });
+    Route::get('user/activities/get-by-date', [ActivityController::class, 'fetchByDate']);
 });

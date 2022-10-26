@@ -11,6 +11,12 @@ use Tests\TestCase;
 class ActivityTest extends TestCase
 {
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->authenticate(User::factory()->create(['user_type' => User::SUPER_ADMIN]));
+    }
+
     public function test_admin_cant_create_more_than_four_activities_each_day()
     {
         $this->expectException(ValidationException::class);
@@ -55,7 +61,7 @@ class ActivityTest extends TestCase
 
     public function test_user_can_create_global_activity()
     {
-        User::factory(10)->create(['user_type' => 'user']);
+        User::factory(10)->create(['user_type' => User::USER]);
 
         $payload = [
             'title'       => $this->faker->text(20),
@@ -73,7 +79,7 @@ class ActivityTest extends TestCase
 
     public function test_user_can_create_activity_for_user()
     {
-        $user = User::factory()->create(['user_type' => 'user']);
+        $user = User::factory()->create(['user_type' => User::USER]);
 
         $payload = [
             'title'       => $this->faker->text(20),
@@ -99,7 +105,7 @@ class ActivityTest extends TestCase
     public function test_user_can_update_global_activity()
     {
         $activity = Activity::factory()->create(['is_global' => true]);
-        $user     = User::factory()->create(['user_type' => 'user']);
+        $user     = User::factory()->create(['user_type' => User::USER]);
 
         Revision::factory()->create([
             'user_id'     => $user->id,
@@ -136,8 +142,8 @@ class ActivityTest extends TestCase
 
     public function test_user_can_update_global_activity_for_user()
     {
-        $user1    = User::factory()->create(['user_type' => 'user']);
-        $user2    = User::factory()->create(['user_type' => 'user']);
+        $user1    = User::factory()->create(['user_type' => User::USER]);
+        $user2    = User::factory()->create(['user_type' => User::USER]);
         $activity = Activity::factory()->create(['is_global' => true]);
 
         Revision::factory()->createMany([
@@ -184,8 +190,8 @@ class ActivityTest extends TestCase
 
     public function test_user_can_delete_activity()
     {
-        $user1    = User::factory()->create(['user_type' => 'user']);
-        $user2    = User::factory()->create(['user_type' => 'user']);
+        $user1    = User::factory()->create(['user_type' => User::USER]);
+        $user2    = User::factory()->create(['user_type' => User::USER]);
         $activity = Activity::factory()->create(['is_global' => true]);
 
         Revision::factory()->createMany([

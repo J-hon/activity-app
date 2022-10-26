@@ -39,7 +39,7 @@ class CreateActivityForUsersJob implements ShouldQueue
 
         if ($this->activity->is_global) {
             $userIds = User::select(['id', 'user_type'])
-                ->where('user_type', '=', 'user')
+                ->where('user_type', '=', User::USER)
                 ->pluck('id');
 
             foreach ($userIds as $userId) {
