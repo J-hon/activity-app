@@ -2,24 +2,19 @@
 
 namespace App\Services;
 
+use App\Jobs\CreateActivityForUsersJob;
 use App\Models\Activity;
 use App\Models\Revision;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class ActivityService
 {
 
-    public function get(int $userId = null): array
+    public function get(): array
     {
         try {
-            $activities = Activity::query()
-                ->when($userId, function ($query) use ($userId) {
-                    $query->whereHas('users', fn ($query) => $query->where('users.id', '=', $userId));
-                })
-                ->get();
-
+            $activities = Activity::get();
             return [
                 'status'  => true,
                 'message' => 'Activities retrieved!',
@@ -37,34 +32,13 @@ class ActivityService
         }
     }
 
-    public function create(array $params, int $userId = null): array
+    public function create(array $params): array
     {
         DB::beginTransaction();
 
         try {
-            $activities = [];
-            $activityId = Activity::create($params)->id;
-
-            if ($params['is_global']) {
-                $users = User::query()->select(['id', 'user_type'])
-                    ->where('user_type', '=', 'user')
-                    ->get();
-
-                foreach ($users as $user) {
-                    $activities[] = [
-                        'activity_id' => $activityId,
-                        'user_id'     => $user->id
-                    ];
-                }
-
-                DB::table('activity_user')->insert($activities);
-            }
-            else {
-                DB::table('activity_user')->insert([
-                    'activity_id' => $activityId,
-                    'user_id'     => $userId
-                ]);
-            }
+            $activity = Activity::create($params);
+            CreateActivityForUsersJob::dispatch($activity, $params['user_id'] ?? null);
 
             DB::commit();
             return [
@@ -89,26 +63,40 @@ class ActivityService
         try {
             if (!$userId) {
                 Activity::find($activityId)->update($params);
+
+                Revision::where('activity_id', '=', $activityId)->update($params);
             }
             else {
-                $revision = Revision::updateOrCreate([
+                Revision::where([
                     'user_id'     => $userId,
                     'activity_id' => $activityId
-                ], $params);
-
-                DB::table('activity_user')
-                    ->where([
-                        'user_id'     => $userId,
-                        'activity_id' => $activityId
-                    ])
-                    ->update([
-                        'revision_id' => $revision->id
-                    ]);
+                ])
+                ->update($params);
             }
 
             return [
                 'status'  => true,
                 'message' => 'Activity updated!',
+                'code'    => 200
+            ];
+        }
+        catch (Throwable $th) {
+            report($th);
+            return [
+                'status'  => false,
+                'message' => 'An error occurred. Please try again shortly',
+                'code'    => 400
+            ];
+        }
+    }
+
+    public function delete($id): array
+    {
+        try {
+            Activity::find($id)->delete();
+            return [
+                'status'  => true,
+                'message' => 'Activity deleted!',
                 'code'    => 200
             ];
         }

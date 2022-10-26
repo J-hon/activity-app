@@ -20,6 +20,7 @@ class ActivityFactory extends Factory
             'title'       => $this->faker->text(20),
             'description' => $this->faker->text,
             'image'       => $this->faker->imageUrl,
+            'due_date'    => $this->faker->date,
             'is_global'   => $this->faker->boolean(33)
         ];
     }

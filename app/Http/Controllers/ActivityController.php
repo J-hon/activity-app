@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ActivityRequest;
+use App\Http\Requests\CreateActivityRequest;
 use App\Http\Requests\UpdateActivityRequest;
 use App\Http\Resources\ActivityResource;
 use App\Services\ActivityService;
@@ -26,19 +26,9 @@ class ActivityController extends BaseController
         );
     }
 
-    public function store(ActivityRequest $request): JsonResponse
+    public function store(CreateActivityRequest $request): JsonResponse
     {
         $response = $this->activityService->create($request->validated());
-        return $this->responseJson(
-            $response['status'],
-            $response['code'],
-            $response['message']
-        );
-    }
-
-    public function storeOne(int $userId, ActivityRequest $request): JsonResponse
-    {
-        $response = $this->activityService->create($request->validated(), $userId);
         return $this->responseJson(
             $response['status'],
             $response['code'],
@@ -59,6 +49,16 @@ class ActivityController extends BaseController
     public function updateOne(int $userId, int $activityId, UpdateActivityRequest $request): JsonResponse
     {
         $response = $this->activityService->update($activityId, $request->validated(), $userId);
+        return $this->responseJson(
+            $response['status'],
+            $response['code'],
+            $response['message']
+        );
+    }
+
+    public function destroy(int $activityId): JsonResponse
+    {
+        $response = $this->activityService->delete($activityId);
         return $this->responseJson(
             $response['status'],
             $response['code'],
