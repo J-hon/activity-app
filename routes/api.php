@@ -24,9 +24,9 @@ Route::prefix('auth')->group(function () {
 Route::prefix('activity')->group(function () {
     Route::post('', [ActivityController::class, 'store']);
     Route::put('{id}', [ActivityController::class, 'update']);
+});
 
-    Route::prefix('user')->group(function () {
-        Route::post('{id}/activity', [ActivityController::class, 'storeOne']);
-        Route::put('{userId}/activity/{activityId}', [ActivityController::class, 'updateOne']);
-    });
+Route::prefix('user')->group(function () {
+    Route::post('{id}/activity', [ActivityController::class, 'storeOne']);
+    Route::put('{userId}/activity/{activityId}', [ActivityController::class, 'updateOne']);
 });
