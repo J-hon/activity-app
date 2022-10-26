@@ -101,7 +101,8 @@ class ActivityTest extends TestCase
         $activity = Activity::factory()->create(['is_global' => true]);
         $user     = User::factory()->create(['user_type' => 'user']);
 
-        $user->revisions()->create([
+        Revision::factory()->create([
+            'user_id'     => $user->id,
             'activity_id' => $activity->id,
             'title'       => $activity->title,
             'description' => $activity->description,
@@ -139,7 +140,7 @@ class ActivityTest extends TestCase
         $user2    = User::factory()->create(['user_type' => 'user']);
         $activity = Activity::factory()->create(['is_global' => true]);
 
-        Revision::insert([
+        Revision::factory()->createMany([
             [
                 'user_id'     => $user1->id,
                 'activity_id' => $activity->id,
