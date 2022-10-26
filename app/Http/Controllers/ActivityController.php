@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ActivityRequest;
+use App\Http\Requests\CreateActivityRequest;
 use App\Http\Requests\UpdateActivityRequest;
+use App\Http\Resources\ActivityCollection;
 use App\Http\Resources\ActivityResource;
 use App\Services\ActivityService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends BaseController
 {
@@ -26,19 +28,20 @@ class ActivityController extends BaseController
         );
     }
 
-    public function store(ActivityRequest $request): JsonResponse
+    public function fetchByDate(): JsonResponse
     {
-        $response = $this->activityService->create($request->validated());
+        $response = $this->activityService->getBy(Auth::id(), request('start_date'), request('end_date'));
         return $this->responseJson(
             $response['status'],
             $response['code'],
-            $response['message']
+            $response['message'],
+            new ActivityCollection($response['data'])
         );
     }
 
-    public function storeOne(int $userId, ActivityRequest $request): JsonResponse
+    public function store(CreateActivityRequest $request): JsonResponse
     {
-        $response = $this->activityService->create($request->validated(), $userId);
+        $response = $this->activityService->create($request->validated());
         return $this->responseJson(
             $response['status'],
             $response['code'],
@@ -59,6 +62,16 @@ class ActivityController extends BaseController
     public function updateOne(int $userId, int $activityId, UpdateActivityRequest $request): JsonResponse
     {
         $response = $this->activityService->update($activityId, $request->validated(), $userId);
+        return $this->responseJson(
+            $response['status'],
+            $response['code'],
+            $response['message']
+        );
+    }
+
+    public function destroy(int $activityId): JsonResponse
+    {
+        $response = $this->activityService->delete($activityId);
         return $this->responseJson(
             $response['status'],
             $response['code'],

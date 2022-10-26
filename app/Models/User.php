@@ -3,14 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+
+    const SUPER_ADMIN = 'super_admin';
+    const USER        = 'user';
 
     protected $fillable = [
         'name',
@@ -23,8 +28,8 @@ class User extends Authenticatable
         'password'
     ];
 
-    public function activities(): BelongsToMany
+    public function revisions(): HasMany
     {
-        return $this->belongsToMany(Activity::class);
+        return $this->hasMany(Revision::class);
     }
 }
