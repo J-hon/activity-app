@@ -180,4 +180,33 @@ class ActivityTest extends TestCase
             'image'       => $activity->image
         ]);
     }
+
+    public function test_user_can_delete_activity()
+    {
+        $user1    = User::factory()->create(['user_type' => 'user']);
+        $user2    = User::factory()->create(['user_type' => 'user']);
+        $activity = Activity::factory()->create(['is_global' => true]);
+
+        Revision::insert([
+            [
+                'user_id'     => $user1->id,
+                'activity_id' => $activity->id,
+                'title'       => $activity->title,
+                'description' => $activity->description,
+                'image'       => $activity->image
+            ], [
+                'user_id'     => $user2->id,
+                'activity_id' => $activity->id,
+                'title'       => $activity->title,
+                'description' => $activity->description,
+                'image'       => $activity->image
+            ]
+        ]);
+
+        $response = $this->deleteJson("$this->baseUrl/activity/$activity->id");
+        $response->assertStatus(200);
+
+        $this->assertDatabaseCount('activities', 0);
+        $this->assertDatabaseCount('revisions', 0);
+    }
 }
