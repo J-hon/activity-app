@@ -187,7 +187,7 @@ class ActivityTest extends TestCase
         $user2    = User::factory()->create(['user_type' => 'user']);
         $activity = Activity::factory()->create(['is_global' => true]);
 
-        Revision::insert([
+        Revision::factory()->createMany([
             [
                 'user_id'     => $user1->id,
                 'activity_id' => $activity->id,

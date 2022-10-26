@@ -36,9 +36,24 @@ class BaseRepository implements BaseContract
         return $this->getQuery()->first();
     }
 
-    public function with(string|array $relation)
+    public function all()
     {
-        return $this->getQuery()->with($relation);
+        return $this->getQuery()->get();
+    }
+
+    public function count()
+    {
+        return $this->getQuery()->count();
+    }
+
+    public function paginate(int $limit = 10)
+    {
+        return $this->getQuery()->paginate($limit);
+    }
+
+    public function paginateWhere(array $params, int $limit = 10)
+    {
+        return $this->getQuery()->where($params)->orderBy('created_at', 'desc')->paginate($limit);
     }
 
     public function find(int|string $id, $withTrash = false)
@@ -48,6 +63,11 @@ class BaseRepository implements BaseContract
         }
 
         return $this->getQuery()->find($id);
+    }
+
+    public function updateBy(array $where, array $request)
+    {
+        return $this->getQuery()->where($where)->update($request);
     }
 
     public function findByIdOrFail(int|string $id)
@@ -65,5 +85,38 @@ class BaseRepository implements BaseContract
     public function create(array $request)
     {
         return $this->getQuery()->create($request);
+    }
+
+    public function insert(array $rows)
+    {
+        return $this->getQuery()->insert($rows);
+    }
+
+    public function with(string|array $relation)
+    {
+        return $this->getQuery()->with($relation);
+    }
+
+    public function update(int|string $id, array $request, bool $returnModel = true, bool $withTrash = false)
+    {
+        if ($withTrash) {
+            $model = $this->getQuery()->withTrashed()->find($id);
+        } else {
+            $model = $this->getQuery()->find($id);
+        }
+
+        $successful = $model->update($request);
+
+        return $returnModel ? $model : $successful;
+    }
+
+    public function deleteBy(array $where): bool
+    {
+        return $this->getQuery()->where($where)->delete();
+    }
+
+    public function delete(int|string $id): bool
+    {
+        return $this->getQuery()->find($id)->delete();
     }
 }

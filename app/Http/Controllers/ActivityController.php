@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateActivityRequest;
 use App\Http\Requests\UpdateActivityRequest;
+use App\Http\Resources\ActivityCollection;
 use App\Http\Resources\ActivityResource;
 use App\Services\ActivityService;
 use Illuminate\Http\JsonResponse;
@@ -23,6 +24,17 @@ class ActivityController extends BaseController
             $response['code'],
             $response['message'],
             ActivityResource::collection($response['data'])
+        );
+    }
+
+    public function fetchByDate(): JsonResponse
+    {
+        $response = $this->activityService->getBy(request('start_date'), request('end_date'));
+        return $this->responseJson(
+            $response['status'],
+            $response['code'],
+            $response['message'],
+            new ActivityCollection($response['data'])
         );
     }
 

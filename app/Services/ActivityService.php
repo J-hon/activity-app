@@ -2,19 +2,45 @@
 
 namespace App\Services;
 
+use App\Contracts\ActivityContract;
+use App\Contracts\RevisionContract;
 use App\Jobs\CreateActivityForUsersJob;
-use App\Models\Activity;
-use App\Models\Revision;
-use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class ActivityService
 {
 
+    public function __construct(
+        protected ActivityContract $activityRepository,
+        protected RevisionContract $revisionRepository
+    ) {
+    }
+
+    public function getBy($startDate, $endDate): array
+    {
+        try {
+            $activities = $this->revisionRepository->getByDateRange($startDate, $endDate);
+            return [
+                'status'  => true,
+                'message' => 'Activities retrieved!',
+                'code'    => 200,
+                'data'    => $activities
+            ];
+        }
+        catch (Throwable $th) {
+            report($th);
+            return [
+                'status'  => false,
+                'message' => 'An error occurred. Please try again shortly',
+                'code'    => 400
+            ];
+        }
+    }
+
     public function get(): array
     {
         try {
-            $activities = Activity::get();
+            $activities = $this->activityRepository->all();
             return [
                 'status'  => true,
                 'message' => 'Activities retrieved!',
@@ -34,13 +60,11 @@ class ActivityService
 
     public function create(array $params): array
     {
-        DB::beginTransaction();
-
         try {
-            $activity = Activity::create($params);
+            $activity = $this->activityRepository->create($params);
+
             CreateActivityForUsersJob::dispatch($activity, $params['user_id'] ?? null);
 
-            DB::commit();
             return [
                 'status'  => true,
                 'message' => 'Activity created!',
@@ -48,7 +72,6 @@ class ActivityService
             ];
         }
         catch (Throwable $th) {
-            DB::rollBack();
             report($th);
             return [
                 'status'  => false,
@@ -62,16 +85,17 @@ class ActivityService
     {
         try {
             if (!$userId) {
-                Activity::find($activityId)->update($params);
+                $this->activityRepository->update($activityId, $params);
 
-                Revision::where('activity_id', '=', $activityId)->update($params);
+                $this->revisionRepository->updateBy([
+                    'activity_id' => $activityId
+                ], $params);
             }
             else {
-                Revision::where([
+                $this->revisionRepository->updateBy([
                     'user_id'     => $userId,
                     'activity_id' => $activityId
-                ])
-                ->update($params);
+                ], $params);
             }
 
             return [
@@ -93,7 +117,7 @@ class ActivityService
     public function delete($id): array
     {
         try {
-            Activity::find($id)->delete();
+            $this->activityRepository->delete($id);
             return [
                 'status'  => true,
                 'message' => 'Activity deleted!',

@@ -26,6 +26,7 @@ Route::prefix('activity')->group(function () {
     Route::post('', [ActivityController::class, 'store']);
     Route::put('{id}', [ActivityController::class, 'update']);
     Route::delete('{id}', [ActivityController::class, 'destroy']);
+    Route::get('get-by-date', [ActivityController::class, 'fetchByDate']);
 });
 
 Route::put('user/{userId}/activity/{activityId}', [ActivityController::class, 'updateOne']);
