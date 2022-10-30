@@ -18,9 +18,9 @@ export default function Activities() {
         setData({...data, [e.target.name] : e.target.value });
     };
 
-    const openModal = e => {
-        setModalOpen(true);
-        console.log(value);
+    const handleClick = value => {
+        onChange(value);
+        setModalOpen(!modalOpen);
     };
 
     const submit = e => {
@@ -47,8 +47,7 @@ export default function Activities() {
             <Guest>
                 <div className="bg-white">
                     <Modal id={Math.random()} modalOpen={modalOpen} setModalOpen={setModalOpen} title={`Create Activity`}>
-                        <div className="max-w-sm mx-auto px-4 py-8">
-                            <h1 className="text-3xl text-slate-800 font-bold mb-6">Create</h1>
+                        <div className="max-w-sm px-10 py-8">
                             <form onSubmit={submit}>
                                 <div className="space-y-4">
                                     <div>
@@ -59,10 +58,19 @@ export default function Activities() {
                                     </div>
 
                                     <div>
-                                        <label htmlFor="password" className="block text-sm font-medium mb-1">
-                                            Password
+                                        <label htmlFor="about" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                                            Description
                                         </label>
-                                        <textarea onChange={onHandleChange} name="description" id="description" cols="30" rows="10"></textarea>
+                                        <div className="mt-1 sm:col-span-2 sm:mt-0">
+                                            <textarea
+                                                id="description"
+                                                name="description"
+                                                rows={3}
+                                                className="block w-full pl-3 max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                                defaultValue={''}
+                                            />
+                                            <p className="mt-2 text-sm text-gray-500">Describe this activity.</p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -75,12 +83,8 @@ export default function Activities() {
                         </div>
                     </Modal>
 
-                    <button onClick={openModal}>
-                        Open Modal
-                    </button>
-
                     <Calendar
-                        onChange={onChange}
+                        onChange={handleClick}
                         value={value}
                     />
 

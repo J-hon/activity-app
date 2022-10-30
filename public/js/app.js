@@ -7817,32 +7817,6 @@ function Modal(_ref) {
     modalOpen = _ref.modalOpen,
     setModalOpen = _ref.setModalOpen;
   var modalContent = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-
-  // close on click outside
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var clickHandler = function clickHandler(_ref2) {
-      var target = _ref2.target;
-      if (!modalOpen || modalContent.current.contains(target)) return;
-      setModalOpen(false);
-    };
-    document.addEventListener("click", clickHandler);
-    return function () {
-      return document.removeEventListener("click", clickHandler);
-    };
-  });
-
-  // close if the esc key is pressed
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var keyHandler = function keyHandler(_ref3) {
-      var keyCode = _ref3.keyCode;
-      if (!modalOpen || keyCode !== 27) return;
-      setModalOpen(false);
-    };
-    document.addEventListener("keydown", keyHandler);
-    return function () {
-      return document.removeEventListener("keydown", keyHandler);
-    };
-  });
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_Libs_Transition__WEBPACK_IMPORTED_MODULE_1__["default"], {
       className: "fixed inset-0 bg-slate-900 bg-opacity-30 z-50 transition-opacity",
@@ -7868,9 +7842,9 @@ function Modal(_ref) {
       leaveEnd: "opacity-0 translate-y-4",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
         ref: modalContent,
-        className: "bg-white rounded shadow-lg overflow-auto max-w-lg w-full max-h-full",
+        className: "bg-white rounded shadow-lg overflow-auto max-w-sm w-full max-h-full",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-          className: "px-5 py-3 border-b border-slate-200",
+          className: "px-10 py-3 border-b border-slate-200",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
             className: "flex justify-between items-center",
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
@@ -8254,9 +8228,9 @@ function Activities() {
   var onHandleChange = function onHandleChange(e) {
     setData(_objectSpread(_objectSpread({}, data), {}, _defineProperty({}, e.target.name, e.target.value)));
   };
-  var openModal = function openModal(e) {
-    setModalOpen(true);
-    console.log(value);
+  var handleClick = function handleClick(value) {
+    onChange(value);
+    setModalOpen(!modalOpen);
   };
   var submit = function submit(e) {
     e.preventDefault();
@@ -8279,12 +8253,9 @@ function Activities() {
           modalOpen: modalOpen,
           setModalOpen: setModalOpen,
           title: "Create Activity",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-            className: "max-w-sm mx-auto px-4 py-8",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h1", {
-              className: "text-3xl text-slate-800 font-bold mb-6",
-              children: "Create"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("form", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+            className: "max-w-sm px-10 py-8",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("form", {
               onSubmit: submit,
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
                 className: "space-y-4",
@@ -8301,15 +8272,21 @@ function Activities() {
                   })]
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-                    htmlFor: "password",
-                    className: "block text-sm font-medium mb-1",
-                    children: "Password"
-                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("textarea", {
-                    onChange: onHandleChange,
-                    name: "description",
-                    id: "description",
-                    cols: "30",
-                    rows: "10"
+                    htmlFor: "about",
+                    className: "block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2",
+                    children: "Description"
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+                    className: "mt-1 sm:col-span-2 sm:mt-0",
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("textarea", {
+                      id: "description",
+                      name: "description",
+                      rows: 3,
+                      className: "block w-full pl-3 max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm",
+                      defaultValue: ''
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
+                      className: "mt-2 text-sm text-gray-500",
+                      children: "Describe this activity."
+                    })]
                   })]
                 })]
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
@@ -8319,13 +8296,10 @@ function Activities() {
                   children: "Submit"
                 })
               })]
-            })]
+            })
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
-          onClick: openModal,
-          children: "Open Modal"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_calendar__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          onChange: onChange,
+          onChange: handleClick,
           value: value
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
           className: "mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8",
