@@ -2,9 +2,8 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from '../Pages/Auth/Login';
 import Dashboard from '../Pages/Dashboard';
-import Activities from '../Pages/Activities';
 import Register from '../Pages/Auth/Register';
-import MyMovies from '../Pages/MyMovies';
+import Activities from '../Pages/Activities';
 import PageNotFound from "../Pages/PageNotFound";
 import { ToastContainer } from "react-toastify";
 import RequireAuth from "../Middleware/auth";
@@ -15,17 +14,19 @@ export default function App() {
         <>
             <Routes>
                 <Route path="/" index element={
-                    // <Guest redirectTo="/dashboard">
-                    <Guest>
-                        {/*<Login />*/}
-                        <Activities />
-                    </Guest>
-                } />
-                <Route path="/register" element={
                     <Guest redirectTo="/dashboard">
-                        <Register />
+                        <Login />
+                        <Dashboard />
                     </Guest>
                 } />
+                <Route
+                    path="/register"
+                    element={
+                        <Guest redirectTo="/dashboard">
+                            <Register />
+                        </Guest>
+                    }
+                />
                 <Route path="*" element={<PageNotFound />} />
                 <Route
                     path="/dashboard"
@@ -35,11 +36,12 @@ export default function App() {
                         </RequireAuth>
                     }
                 />
+
                 <Route
-                    path="/my-movies"
+                    path="/activities"
                     element={
                         <RequireAuth redirectTo="/">
-                            <MyMovies />
+                            <Activities />
                         </RequireAuth>
                     }
                 />

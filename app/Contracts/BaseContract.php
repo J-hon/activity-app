@@ -15,6 +15,8 @@ interface BaseContract
 
     public function create(array $request);
 
+    public function where(array $params, bool $first = false);
+
     public function update(int|string $id, array $request, bool $returnModel = true, bool $withTrash = false);
 
     public function delete(int|string $id): bool;

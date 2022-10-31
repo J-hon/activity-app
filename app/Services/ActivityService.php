@@ -41,10 +41,13 @@ class ActivityService
         }
     }
 
-    public function get(): array
+    public function get(int $userId = null): array
     {
         try {
-            $activities = $this->activityRepository->all();
+            $activities = $userId ?
+                $this->revisionRepository->where(['user_id' => $userId]) :
+                $this->activityRepository->all();
+
             return [
                 'status'  => true,
                 'message' => 'Activities retrieved!',

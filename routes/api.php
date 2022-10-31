@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,7 +31,11 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('{id}', [ActivityController::class, 'destroy']);
         });
 
-        Route::put('user/{userId}/activity/{activityId}', [ActivityController::class, 'updateOne']);
+        Route::prefix('user')->group(function () {
+            Route::get('', [UserController::class, 'index']);
+            Route::get('{id}/activities', [ActivityController::class, 'getUserActivities']);
+            Route::put('{id}/activity/{activityId}', [ActivityController::class, 'updateOne']);
+        });
     });
 
     Route::get('user/activities/get-by-date', [ActivityController::class, 'fetchByDate']);

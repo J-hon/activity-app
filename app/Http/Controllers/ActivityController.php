@@ -28,6 +28,17 @@ class ActivityController extends BaseController
         );
     }
 
+    public function getUserActivities(int $userId): JsonResponse
+    {
+        $response = $this->activityService->get($userId);
+        return $this->responseJson(
+            $response['status'],
+            $response['code'],
+            $response['message'],
+            ActivityResource::collection($response['data'])
+        );
+    }
+
     public function fetchByDate(): JsonResponse
     {
         $response = $this->activityService->getBy(Auth::id(), request('start_date'), request('end_date'));

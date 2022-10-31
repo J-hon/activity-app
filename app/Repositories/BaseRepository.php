@@ -43,6 +43,13 @@ class BaseRepository implements BaseContract
         return $this->getQuery()->create($request);
     }
 
+    public function where(array $params, bool $first = false)
+    {
+        $query = $this->getQuery()->where($params);
+
+        return $first ? $query->first() : $query->get();
+    }
+
     public function update(int|string $id, array $request, bool $returnModel = true, bool $withTrash = false)
     {
         if ($withTrash) {
