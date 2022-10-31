@@ -8142,6 +8142,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_activities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/activities */ "./resources/js/services/activities.js");
 /* harmony import */ var _services_users__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/users */ "./resources/js/services/users.js");
 /* harmony import */ var _Layouts_Auth__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Layouts/Auth */ "./resources/js/Layouts/Auth.jsx");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -8156,7 +8157,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 function Activities() {
+  var params = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_5__.useParams)();
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
     activities = _useState2[0],
@@ -8166,7 +8169,7 @@ function Activities() {
     trigger = _useState4[0],
     setTrigger = _useState4[1];
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    _services_users__WEBPACK_IMPORTED_MODULE_2__["default"].getActivities(1).then(function (response) {
+    _services_users__WEBPACK_IMPORTED_MODULE_2__["default"].getActivities(params.id).then(function (response) {
       setActivities(response.data);
     })["catch"](function (err) {
       console.log(err.response.data);
@@ -8190,7 +8193,7 @@ function Activities() {
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_Layouts_Auth__WEBPACK_IMPORTED_MODULE_3__["default"], {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-        className: "px-4 sm:px-6 lg:px-8",
+        className: "overflow-x-auto px-4 sm:px-6 lg:px-8",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
           className: "sm:flex sm:items-center",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -8200,7 +8203,7 @@ function Activities() {
               children: "Users"
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("p", {
               className: "mt-2 text-sm text-gray-700",
-              children: "A list of all John's activities"
+              children: "A list of user's activities"
             })]
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
@@ -8704,7 +8707,6 @@ function Dashboard() {
       setTrigger(function (prevState) {
         return !prevState;
       });
-      console.log(response);
     })["catch"](function (err) {
       console.log(err.response.data.message);
     });
@@ -8814,7 +8816,7 @@ function Dashboard() {
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("td", {
                     className: "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6",
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_9__.Link, {
-                      to: "/activities",
+                      to: "/activities/" + person.id,
                       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("ul", {
                         children: person.name
                       })
@@ -9039,7 +9041,7 @@ function App() {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_Pages_Dashboard__WEBPACK_IMPORTED_MODULE_2__["default"], {})
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Route, {
-        path: "/activities",
+        path: "/activities/:id",
         element: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_Middleware_auth__WEBPACK_IMPORTED_MODULE_7__["default"], {
           redirectTo: "/",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_Pages_Activities__WEBPACK_IMPORTED_MODULE_4__["default"], {})
@@ -9158,13 +9160,6 @@ var Activities = /*#__PURE__*/function () {
     key: "get",
     value: function get() {
       return _api__WEBPACK_IMPORTED_MODULE_0__["default"].get("".concat(API_URL, "/activity")).then(function (response) {
-        return response.data;
-      });
-    }
-  }, {
-    key: "getUserActivities",
-    value: function getUserActivities(user_id) {
-      return _api__WEBPACK_IMPORTED_MODULE_0__["default"].get("http://activity-app.test/api/v1/user/".concat(user_id, "/activities")).then(function (response) {
         return response.data;
       });
     }
@@ -9405,7 +9400,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-var API_URL = 'http://activity-app.test/api/v1';
+var API_URL = 'http://activity-app.test/api/v1/user';
 var Users = /*#__PURE__*/function () {
   function Users() {
     _classCallCheck(this, Users);
@@ -9413,7 +9408,7 @@ var Users = /*#__PURE__*/function () {
   _createClass(Users, [{
     key: "get",
     value: function get() {
-      return _api__WEBPACK_IMPORTED_MODULE_0__["default"].get("".concat(API_URL, "/user")).then(function (response) {
+      return _api__WEBPACK_IMPORTED_MODULE_0__["default"].get("".concat(API_URL)).then(function (response) {
         return response.data;
       });
     }

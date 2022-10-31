@@ -38,7 +38,7 @@ export default function App() {
                 />
 
                 <Route
-                    path="/activities"
+                    path="/activities/:id"
                     element={
                         <RequireAuth redirectTo="/">
                             <Activities />
