@@ -74,7 +74,10 @@ class ActivityTest extends TestCase
         $response = $this->postJson("$this->baseUrl/activity", $payload);
         $response->assertStatus(200);
 
-        $this->assertDatabaseCount('revisions', 430);
+        $this->assertDatabaseHas('activities', [
+            'title'     => $payload['title'],
+            'is_global' => true
+        ]);
     }
 
     public function test_user_can_create_activity_for_user()
