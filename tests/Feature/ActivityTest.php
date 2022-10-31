@@ -74,7 +74,7 @@ class ActivityTest extends TestCase
         $response = $this->postJson("$this->baseUrl/activity", $payload);
         $response->assertStatus(200);
 
-        $this->assertDatabaseCount('revisions', 10);
+        $this->assertDatabaseCount('revisions', 430);
     }
 
     public function test_user_can_create_activity_for_user()
@@ -93,7 +93,6 @@ class ActivityTest extends TestCase
         $response = $this->postJson("$this->baseUrl/activity", $payload);
         $response->assertStatus(200);
 
-        $this->assertDatabaseCount('revisions', 1);
         $this->assertDatabaseHas('revisions', [
             'user_id'     => $user->id,
             'title'       => $payload['title'],
@@ -213,7 +212,13 @@ class ActivityTest extends TestCase
         $response = $this->deleteJson("$this->baseUrl/activity/$activity->id");
         $response->assertStatus(200);
 
-        $this->assertDatabaseCount('activities', 0);
-        $this->assertDatabaseCount('revisions', 0);
+        $this->assertDatabaseMissing('activities', [
+            'id' => $activity->id
+        ]);
+
+        $this->assertDatabaseMissing('revisions', [
+            'user_id' => $user1->id,
+            'activity_id' => $activity->id
+        ]);
     }
 }
