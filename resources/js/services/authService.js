@@ -1,7 +1,7 @@
 import api from "./api";
 import TokenService from "./token";
 
-const API_URL = 'http://movie-app.test/api/v1';
+const API_URL = 'http://activity-app.test/api/v1';
 
 class Auth {
     login({ email, password }) {

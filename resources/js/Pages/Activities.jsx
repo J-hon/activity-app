@@ -1,98 +1,147 @@
-import React, { useState } from "react";
-import Guest from '../Layouts/Guest';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import Modal from "../Components/Modal";
+import React, {useEffect, useState} from "react";
+import ActivityService from "../services/activities";
+import UserService from "../services/users";
+import Auth from "../Layouts/Auth";
 
 export default function Activities() {
-    const [value, onChange]         = useState(new Date());
-    const [modalOpen, setModalOpen] = useState(false);
+    const [ activities, setActivities ] = useState([]);
+    const [ trigger, setTrigger ]       = useState(false);
 
-    const [data, setData] = useState({
-        title: "",
-        description: "",
-        due_date: value
-    });
+    useEffect(() => {
+        UserService.getActivities(1)
+            .then(response => {
+                setActivities(response.data);
+            })
+            .catch(err => {
+                console.log(err.response.data);
+            });
+    }, [trigger]);
 
-    const onHandleChange = e => {
-        setData({...data, [e.target.name] : e.target.value });
-    };
+    const classNames = (...classes) => { return classes.filter(Boolean).join(' ') };
 
-    const handleClick = value => {
-        onChange(value);
-        setModalOpen(!modalOpen);
-    };
-
-    const submit = e => {
-        e.preventDefault();
-    }
-
-    const formatDate = (date) => {
-        let d = new Date(date),
-            month = '' + (d.getMonth() + 1),
-            day = '' + d.getDate(),
-            year = d.getFullYear();
-
-        if (month.length < 2)
-            month = '0' + month;
-
-        if (day.length < 2)
-            day = '0' + day;
-
-        return [year, month, day].join('-');
+    const deleteActivity = id => {
+        ActivityService.delete(id)
+            .then(response => {
+                setTrigger(prevState => !prevState);
+            })
+            .catch(err => {
+                console.log(err.response.data.message);
+            });
     }
 
     return (
         <>
-            <Guest>
-                <div className="bg-white">
-                    <Modal id={Math.random()} modalOpen={modalOpen} setModalOpen={setModalOpen} title={`Create Activity`}>
-                        <div className="max-w-sm px-10 py-8">
-                            <form onSubmit={submit}>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label htmlFor="name" className="block text-sm font-medium mb-1">
-                                            Name
-                                        </label>
-                                        <input onChange={onHandleChange} name="title" type="text" className="pl-3 h-12 block w-full max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="about" className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                                            Description
-                                        </label>
-                                        <div className="mt-1 sm:col-span-2 sm:mt-0">
-                                            <textarea
-                                                id="description"
-                                                name="description"
-                                                rows={3}
-                                                className="block w-full pl-3 max-w-lg rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                                defaultValue={''}
-                                            />
-                                            <p className="mt-2 text-sm text-gray-500">Describe this activity.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center justify-between mt-6">
-                                    <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 btn bg-indigo-500 active:bg-indigo-900 hover:bg-indigo-600 text-white">
-                                        Submit
-                                    </button>
-                                </div>
-                            </form>
+            <Auth>
+                <div className="px-4 sm:px-6 lg:px-8">
+                    <div className="sm:flex sm:items-center">
+                        <div className="sm:flex-auto">
+                            <h1 className="text-xl font-semibold text-gray-900">Users</h1>
+                            <p className="mt-2 text-sm text-gray-700">
+                                A list of all John's activities
+                            </p>
                         </div>
-                    </Modal>
+                    </div>
 
-                    <Calendar
-                        onChange={handleClick}
-                        value={value}
-                    />
+                    <div className="mt-8 flex flex-col">
+                        <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                            <div className="inline-block min-w-full py-2 align-middle">
+                                <div className="shadow-sm ring-1 ring-black ring-opacity-5">
+                                    <table className="min-w-full border-separate" style={{ borderSpacing: 0 }}>
+                                        <thead className="bg-gray-50">
+                                        <tr>
+                                            <th
+                                                scope="col"
+                                                className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
+                                            >
+                                                SN
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
+                                            >
+                                                Title
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter lg:table-cell"
+                                            >
+                                                Description
+                                            </th>
 
-                    <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-                        <h2 className="text-xl font-bold text-gray-900">Users</h2>
+                                            <th
+                                                scope="col"
+                                                className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pr-4 pl-3 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
+                                            >
+                                                <span className="sr-only">Edit</span>
+                                            </th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody className="bg-white">
+                                        { activities.map((activity, activityIdx) => (
+                                            <tr key={activity.id}>
+                                                <td
+                                                    className={classNames(
+                                                        activityIdx !== activity.length - 1 ? 'border-b border-gray-200' : '',
+                                                        'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8'
+                                                    )}
+                                                >
+                                                    {activity.id}
+                                                </td>
+                                                <td
+                                                    className={classNames(
+                                                        activityIdx !== activity.length - 1 ? 'border-b border-gray-200' : '',
+                                                        'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden sm:table-cell'
+                                                    )}
+                                                >
+                                                    {activity.description}
+                                                </td>
+                                                <td
+                                                    className={classNames(
+                                                        activityIdx !== activity.length - 1 ? 'border-b border-gray-200' : '',
+                                                        'whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden lg:table-cell'
+                                                    )}
+                                                >
+                                                    {activity.image}
+                                                </td>
+                                                <td
+                                                    className={classNames(
+                                                        activityIdx !== activity.length - 1 ? 'border-b border-gray-200' : '',
+                                                        'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
+                                                    )}
+                                                >
+                                                    <button
+                                                        onClick={ () => deleteActivity(activity.id) }
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2
+                                                    text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2
+                                                    focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                                    >
+                                                        Edit
+                                                    </button>
+
+                                                    &nbsp;
+
+                                                    <button
+                                                        onClick={ () => deleteActivity(activity.id) }
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-slate-900 px-4 py-2
+                                                    text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2
+                                                    focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </Guest>
+            </Auth>
         </>
     );
 };

@@ -1,12 +1,12 @@
 import Login from '../pages/Auth/Login';
 import Dashboard from '../pages/Dashboard';
 import Register from '../pages/Auth/Register';
-import MyMovies from '../pages/MyMovies';
+import Activities from '../Pages/Activities';
 import PageNotFound from '../pages/PageNotFound';
 
 const routes = [
     {
-        path: '/',
+        path: '/dashboard',
         exact: true,
         auth: true,
         component: Dashboard,
@@ -25,10 +25,10 @@ const routes = [
         component: Register,
     },
     {
-        path: '',
+        path: '/activities',
         exact: false,
-        auth: false,
-        component: MyMovies,
+        auth: true,
+        component: Activities,
     },
     {
         path: '',

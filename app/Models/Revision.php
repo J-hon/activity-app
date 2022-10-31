@@ -18,6 +18,8 @@ class Revision extends Model
         'image'
     ];
 
+    public $timestamps = false;
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

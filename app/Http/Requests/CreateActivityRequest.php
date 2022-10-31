@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Rules\MaxActivityRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class CreateActivityRequest extends FormRequest
 {
@@ -12,11 +11,7 @@ class CreateActivityRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'       => ['required', Rule::unique('activities')->where(
-                function ($query) {
-                    return $query->where('created_at', '=', now());
-                }
-            )],
+            'title'       => ['required'],
             'description' => ['required'],
             'image'       => ['required'],
             'due_date'    => ['required', 'date_format:Y-m-d', new MaxActivityRule()],

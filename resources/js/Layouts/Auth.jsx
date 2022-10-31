@@ -1,10 +1,10 @@
 import React from 'react';
-import AppHeader from '../Components/Header';
+import Header from '../Components/Header';
 
 export default function Auth({children}) {
     return (
         <>
-            <AppHeader />
+            <Header />
             <div className="flex h-screen overflow-hidden">
                 <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
                     <main>

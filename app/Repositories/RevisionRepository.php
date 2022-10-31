@@ -19,7 +19,9 @@ class RevisionRepository extends BaseRepository implements RevisionContract
     {
         return $this->getQuery()
             ->where('user_id', '=', $userId)
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereHas('activity', function($query) use ($startDate, $endDate) {
+                $query->whereBetween('due_date', [$startDate, $endDate]);
+            })
             ->paginate(10);
     }
 

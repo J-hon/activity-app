@@ -10,7 +10,7 @@ setup(store);
 
 const root = ReactDOM.createRoot(document.getElementById("app"));
 root.render(
-    <Provider store={ store }>
+    <Provider store={store}>
         <BrowserRouter>
             <App />
         </BrowserRouter>
