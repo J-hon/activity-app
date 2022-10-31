@@ -2,20 +2,22 @@ import React, {useEffect, useState} from "react";
 import ActivityService from "../services/activities";
 import UserService from "../services/users";
 import Auth from "../Layouts/Auth";
+import { useParams } from "react-router-dom";
 
 export default function Activities() {
+    const params                        = useParams();
     const [ activities, setActivities ] = useState([]);
     const [ trigger, setTrigger ]       = useState(false);
 
     useEffect(() => {
-        UserService.getActivities(1)
+        UserService.getActivities(params.id)
             .then(response => {
                 setActivities(response.data);
             })
             .catch(err => {
                 console.log(err.response.data);
             });
-    }, [trigger]);
+    }, [ trigger ]);
 
     const classNames = (...classes) => { return classes.filter(Boolean).join(' ') };
 
@@ -32,12 +34,12 @@ export default function Activities() {
     return (
         <>
             <Auth>
-                <div className="px-4 sm:px-6 lg:px-8">
+                <div className="overflow-x-auto px-4 sm:px-6 lg:px-8">
                     <div className="sm:flex sm:items-center">
                         <div className="sm:flex-auto">
                             <h1 className="text-xl font-semibold text-gray-900">Users</h1>
                             <p className="mt-2 text-sm text-gray-700">
-                                A list of all John's activities
+                                A list of user's activities
                             </p>
                         </div>
                     </div>

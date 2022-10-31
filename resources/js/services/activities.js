@@ -38,14 +38,6 @@ class Activities {
             });
     }
 
-    getUserActivities(user_id) {
-        return api
-            .get(`http://activity-app.test/api/v1/user/${user_id}/activities`)
-            .then((response) => {
-                return response.data;
-            });
-    }
-
     delete(id) {
         return api
             .delete(`${API_URL}/activity/${id}`)

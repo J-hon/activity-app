@@ -98,7 +98,6 @@ export default function Dashboard() {
         ActivityService.update(id, data)
             .then(response => {
                 setTrigger(prevState => !prevState);
-                console.log(response);
             })
             .catch(err => {
                 console.log(err.response.data.message);
@@ -206,7 +205,7 @@ export default function Dashboard() {
                                             {person.id}
                                         </td>
                                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                            <Link to="/activities">
+                                            <Link to={"/activities/" + person.id}>
                                                 <ul>{person.name}</ul>
                                             </Link>
                                         </td>

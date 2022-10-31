@@ -1,11 +1,11 @@
 import api from "./api";
 
-const API_URL = 'http://activity-app.test/api/v1';
+const API_URL = 'http://activity-app.test/api/v1/user';
 
 class Users {
     get() {
         return api
-            .get(`${API_URL}/user`)
+            .get(`${API_URL}`)
             .then((response) => {
                 return response.data;
             });
